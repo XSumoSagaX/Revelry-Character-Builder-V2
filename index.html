@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Revelry Character Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="ember-field" aria-hidden="true"></canvas>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Revelry home">
+        <span class="brand-mark">R</span>
+        <span>Revelry</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#difference">Why Revelry</a>
+        <a href="#builder">Builder</a>
+        <a href="#sheet">Sheet</a>
+      </nav>
+      <button class="ghost-button" id="save-button" type="button">Save</button>
+    </header>
+
+    <main id="top">
+      <section class="hero" data-reveal>
+        <div class="hero-bg" aria-hidden="true">
+          <span class="moon"></span>
+          <span class="sigil sigil-one"></span>
+          <span class="sigil sigil-two"></span>
+          <span class="ridge ridge-back"></span>
+          <span class="ridge ridge-front"></span>
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">Heroic high fantasy, fast and fluid</p>
+          <h1>Build a hero of Sunder without wrestling the rulebook.</h1>
+          <p>
+            Revelry turns character creation into a guided oath: choose the bloodline, scars,
+            ambitions, tactics, and dangerous tricks that make your character worth cheering for.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#builder">Begin the Builder</a>
+            <button class="secondary-button" type="button" id="seed-button">Inspire Me</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="difference" id="difference" data-reveal>
+        <div class="section-kicker">What makes Revelry different</div>
+        <h2>Rules that push characters toward bold, cinematic choices.</h2>
+        <div class="feature-grid">
+          <article>
+            <strong>Hope and Fear</strong>
+            <span>Even rolls fuel player heroics; odd rolls feed the Storyteller's opposition.</span>
+          </article>
+          <article>
+            <strong>Injury-based combat</strong>
+            <span>Stress, Serious, Critical, and Lethal injuries make every hit feel dramatic.</span>
+          </article>
+          <article>
+            <strong>Custom spellcraft</strong>
+            <span>Keiral magic combines Elements and Components instead of locking casters into lists.</span>
+          </article>
+          <article>
+            <strong>Traits over classes</strong>
+            <span>Mix Scholar, Ambassador, Leader, Mercenary, Warrior, and Spellcaster traits freely.</span>
+          </article>
+          <article>
+            <strong>Identity first</strong>
+            <span>Goals, fears, bonds, Expertises, and Experiences make the sheet story-ready.</span>
+          </article>
+          <article>
+            <strong>Playtest spirit</strong>
+            <span>The game invites tables to forge new options when the story demands it.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="builder-shell" id="builder" data-reveal>
+        <div class="builder-top">
+          <div>
+            <div class="section-kicker">Guided character creation</div>
+            <h2>Ten steps from spark to legend.</h2>
+          </div>
+          <div class="mode-toggle" role="group" aria-label="Builder mode">
+            <button class="active" type="button" data-mode="beginner">Beginner</button>
+            <button type="button" data-mode="advanced">Advanced</button>
+          </div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-bar" aria-hidden="true"><span id="progress-fill"></span></div>
+          <ol class="step-track" id="step-track"></ol>
+        </div>
+
+        <div class="builder-layout">
+          <form class="wizard-panel" id="character-form">
+            <section class="wizard-step active" data-step="0">
+              <div class="step-heading">
+                <p>Step 1</p>
+                <h3>Concept</h3>
+              </div>
+              <div class="field-grid">
+                <label>Name <input name="name" placeholder="Astra Vale" /></label>
+                <label>Visual vibe <input name="vibe" placeholder="storm-lit duelist in cracked brass" /></label>
+                <label>Goal <textarea name="goal" placeholder="What does your hero want badly enough to bleed for?"></textarea></label>
+                <label>Fear <textarea name="fear" placeholder="What truth, enemy, or failure haunts them?"></textarea></label>
+                <label>Bond <textarea name="bond" placeholder="Who or what keeps them human?"></textarea></label>
+                <label>Legend hook <textarea name="concept" placeholder="A one-sentence pitch for the character."></textarea></label>
+              </div>
+            </section>
+
+            <section class="wizard-step" data-step="1">
+              <div class="step-heading">
+                <p>Step 2</p>
+                <h3>Abilities</h3>
+              </div>
+              <p class="helper" data-beginner>Assign 10 points. No ability can start above 3 unless a Heritage later changes it.</p>
+              <div class="point-meter"><span id="points-used">0</span> / <span id="points-total">10</span> Ability Points</div>
+              <div class="ability-grid" id="ability-grid"></div>
+              <div class="validation" id="ability-validation" role="status"></div>
+            </section>
+
+            <section class="wizard-step" data-step="2">
+              <div class="step-heading">
+                <p>Step 3</p>
+                <h3>Derived Stats</h3>
+              </div>
+              <div class="stat-cards" id="derived-cards"></div>
+              <p class="helper">Defenses are calculated as 10 plus two linked ability scores. Movement starts at 30 ft. and Dexterity adds 5 ft. per point.</p>
+            </section>
+
+            <section class="wizard-step" data-step="3">
+              <div class="step-heading">
+                <p>Step 4</p>
+                <h3>Heritage</h3>
+              </div>
+              <label class="checkline"><input type="checkbox" name="mixedHeritage" /> Mixed heritage</label>
+              <div class="search-row">
+                <input id="heritage-search" type="search" placeholder="Search heritages" />
+              </div>
+              <div class="choice-grid" id="heritage-grid"></div>
+            </section>
+
+            <section class="wizard-step" data-step="4">
+              <div class="step-heading">
+                <p>Step 5</p>
+                <h3>Community</h3>
+              </div>
+              <div class="search-row">
+                <input id="community-search" type="search" placeholder="Search communities" />
+              </div>
+              <div class="choice-grid" id="community-grid"></div>
+            </section>
+
+            <section class="wizard-step" data-step="5">
+              <div class="step-heading">
+                <p>Step 6</p>
+                <h3>Traits</h3>
+              </div>
+              <div class="filter-row">
+                <input id="trait-search" type="search" placeholder="Search traits" />
+                <select id="trait-filter" aria-label="Filter traits by archetype">
+                  <option value="all">All archetypes</option>
+                </select>
+              </div>
+              <p class="helper">Choose three starting Traits. Core Traits anchor an archetype, but Revelry lets you mix freely.</p>
+              <div class="choice-grid" id="trait-grid"></div>
+            </section>
+
+            <section class="wizard-step" data-step="6">
+              <div class="step-heading">
+                <p>Step 7</p>
+                <h3>Equipment</h3>
+              </div>
+              <div class="filter-row">
+                <input id="equipment-search" type="search" placeholder="Search equipment" />
+                <select id="equipment-filter" aria-label="Filter equipment">
+                  <option value="all">All equipment</option>
+                  <option value="weapon">Weapons</option>
+                  <option value="armor">Armor</option>
+                  <option value="shield">Shields</option>
+                  <option value="arcane">Arcane</option>
+                </select>
+              </div>
+              <p class="helper">Starting characters get 10 handfuls of gold, armor, clothing, camping gear, and one unique thematic item.</p>
+              <div class="choice-grid" id="equipment-grid"></div>
+              <label>Unique item <input name="uniqueItem" placeholder="a cracked oracle coin, oath-ring, bone compass..." /></label>
+            </section>
+
+            <section class="wizard-step" data-step="7">
+              <div class="step-heading">
+                <p>Step 8</p>
+                <h3>Expertises</h3>
+              </div>
+              <p class="helper">You start with two Expertises plus additional Expertises equal to your Intellect.</p>
+              <div class="point-meter"><span id="expertise-count">0</span> / <span id="expertise-total">2</span> Expertises</div>
+              <div id="expertise-list" class="stack-list"></div>
+              <button class="secondary-button small" type="button" id="add-expertise">Add Expertise</button>
+            </section>
+
+            <section class="wizard-step" data-step="8">
+              <div class="step-heading">
+                <p>Step 9</p>
+                <h3>Experiences</h3>
+              </div>
+              <p class="helper">Create two vivid phrases. "Assassin of the Sapphire Syndicate" beats "Assassin."</p>
+              <div class="field-grid two">
+                <label>Experience 1 <input name="experience1" placeholder="Last oathkeeper of the Ashen Gate" /></label>
+                <label>Experience 2 <input name="experience2" placeholder="Smuggler-priest of the southern reefs" /></label>
+              </div>
+            </section>
+
+            <section class="wizard-step" data-step="9">
+              <div class="step-heading">
+                <p>Step 10</p>
+                <h3>Review</h3>
+              </div>
+              <div class="review-panel" id="review-panel"></div>
+            </section>
+
+            <div class="wizard-actions">
+              <button class="secondary-button" type="button" id="prev-step">Back</button>
+              <button class="primary-button" type="button" id="next-step">Next</button>
+            </div>
+          </form>
+
+          <aside class="sheet-preview" id="sheet">
+            <div class="sheet-toolbar">
+              <h2>Live Sheet</h2>
+              <div>
+                <button class="ghost-button small" type="button" id="load-button">Load</button>
+                <button class="ghost-button small" type="button" id="export-json">Share</button>
+                <button class="primary-button small" type="button" id="export-pdf">PDF</button>
+              </div>
+            </div>
+            <div id="character-sheet" class="character-sheet"></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
